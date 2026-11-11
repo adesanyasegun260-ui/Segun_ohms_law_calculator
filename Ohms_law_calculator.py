@@ -1,21 +1,24 @@
 
 # Ohm's Law and Power Calculator
-
-import math
+# Author: Segun
+# ND1 Mechatronics Engineering, YabaTech
 
 # Function to collect valid positive numbers
-def get_value(name):
+def get_value(name, unit):
     while True:
         try:
-            value = float(input("Enter " + name + ": "))
+            value = float(input(f"Enter {name} ({unit}): "))
+
             if value <= 0:
                 print("Please enter a positive number.")
             else:
                 return value
-        except ValueError:
-            print("Invalid input! Enter a number.")
 
-# Main calculator function
+        except ValueError:
+            print("Invalid input! Please enter a number.")
+
+
+# Function to perform calculations
 def calculator():
     while True:
         print("\n=== OHM'S LAW AND POWER CALCULATOR ===")
@@ -31,9 +34,33 @@ def calculator():
             print("Thank you for using the calculator!")
             break
 
-        if choice not in ["1", "2", "3", "4"]:
+        elif choice not in ["1", "2", "3", "4"]:
             print("Invalid choice. Try again.")
             continue
+
+        # Display valid input combinations
+        pairs = {
+            "1": [
+                ("Current", "Resistance"),
+                ("Power", "Current"),
+                ("Power", "Resistance")
+            ],
+            "2": [
+                ("Voltage", "Resistance"),
+                ("Power", "Voltage"),
+                ("Power", "Resistance")
+            ],
+            "3": [
+                ("Voltage", "Current"),
+                ("Voltage", "Power"),
+                ("Power", "Current")
+            ],
+            "4": [
+                ("Voltage", "Current"),
+                ("Voltage", "Resistance"),
+                ("Current", "Resistance")
+            ]
+        }
 
         targets = {
             "1": "Voltage",
@@ -45,73 +72,79 @@ def calculator():
         target = targets[choice]
 
         print("\nChoose the two known values:")
-        print("1. Voltage and Current")
-        print("2. Voltage and Resistance")
-        print("3. Current and Resistance")
 
-        pair = input("Choose a combination: ")
+        for i, pair in enumerate(pairs[choice], 1):
+            print(f"{i}. {pair[0]} and {pair[1]}")
 
-        if pair == "1":
-            a = get_value("Voltage (V)")
-            b = get_value("Current (A)")
+        option = input("Choose a combination: ")
 
-            if choice == "1":
-                result = a
-            elif choice == "2":
-                result = b
-            elif choice == "3":
-                result = a / b
-            else:
-                result = a * b
-
-        elif pair == "2":
-            a = get_value("Voltage (V)")
-            b = get_value("Resistance (Ohms)")
-
-            if choice == "1":
-                result = a
-            elif choice == "2":
-                result = a / b
-            elif choice == "3":
-                result = b
-            else:
-                result = (a ** 2) / b
-
-        elif pair == "3":
-            a = get_value("Current (A)")
-            b = get_value("Resistance (Ohms)")
-
-            if choice == "1":
-                result = a * b
-            elif choice == "2":
-                result = a
-            elif choice == "3":
-                result = b
-            else:
-                result = (a ** 2) * b
-
-        else:
+        if option not in ["1", "2", "3"]:
             print("Invalid combination!")
             continue
 
+        first, second = pairs[choice][int(option) - 1]
+
+        # Collect the two known values
         units = {
-            "1": "Volts (V)",
-            "2": "Amperes (A)",
-            "3": "Ohms",
-            "4": "Watts (W)"
+            "Voltage": "V",
+            "Current": "A",
+            "Resistance": "ohms",
+            "Power": "W"
         }
 
-        print("\nFormula used: Ohm's Law")
-        print(target, "=", round(result, 2), units[choice])
+        a = get_value(first, units[first])
+        b = get_value(second, units[second])
 
+        # Perform the correct calculation
+        if target == "Voltage":
+            if first == "Current":
+                result = a * b
+            elif second == "Current":
+                result = a / b
+            else:
+                result = (a * b) ** 0.5
+
+        elif target == "Current":
+            if first == "Voltage":
+                result = a / b
+            elif second == "Voltage":
+                result = a / b
+            else:
+                result = (a / b) ** 0.5
+
+        elif target == "Resistance":
+            if first == "Voltage" and second == "Current":
+                result = a / b
+            elif first == "Voltage":
+                result = (a ** 2) / b
+            else:
+                result = a / (b ** 2)
+
+        else:
+            if first == "Voltage" and second == "Current":
+                result = a * b
+            elif first == "Voltage":
+                result = (a ** 2) / b
+            else:
+                result = (a ** 2) * b
+
+        # Display result
+        print("\n===== CALCULATION RESULT =====")
+        print(f"Formula: {target}")
+        print(f"{target} = {result:.2f} {units[target]}")
+
+        # Extra feature: Repeat calculation
         print("\n1. Calculate again")
         print("2. Exit")
 
-        again = input("Choose: ")
+        again = input("Choose an option: ")
 
         if again == "2":
-            print("Goodbye!")
+            print("Thank you for using the calculator!")
             break
 
-# Run the calculator
-calculator()
+
+# Run the program
+if __name__ == "__main__":
+    calculator()
+
