@@ -10,7 +10,7 @@ accurate results.
 ## How to run it
 Install Python 3 and run:
 
-python ohms_law.py
+python ohms_law_calculator.py
 
 ## Sample output
 OHM'S LAW AND POWER CALCULATOR
