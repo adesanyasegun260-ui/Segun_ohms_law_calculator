@@ -40,6 +40,6 @@ I learned how to use Python functions,
 loops, conditions and mathematical formulas.
 
 ## Author
-Your Name
+Adesanya Segun
 ND1 Mechatronics Engineering
-YabaTech
+YabaTech college of technology 
